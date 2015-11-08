@@ -10,6 +10,7 @@ public class Game extends Frame {
 		
   private GameDataModel dataModel = new GameDataModel();
   private GameView gameView = new GameView();
+  private GameController gameController = new GameController();
 
   public static void main( String args[] ) {
     new Game().setVisible(true);
@@ -18,6 +19,7 @@ public class Game extends Frame {
   public Game() {
     super("Tic Tac Toe");
     initializeGameBoard();
+    gameController.startGame(gameView, dataModel);
   }
 
   private void initializeGameBoard() {
