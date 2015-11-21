@@ -22,13 +22,48 @@ public class GameControllerTests {
   }
 
   @Test
-  public void testUserMoved() {
+  public void testUserMovedHard() {
+    controller.startNewGame();
+    dataModel.difficultyLevel = GameConstants.DifficultyLevel.Hard;
     long startMoves = gameView.movesMade;
     controller.userMoved();
     long endMoves = gameView.movesMade;
     assertEquals("Computer did not move", startMoves + 1, endMoves);
   }
-  
+
+  @Test
+  public void testUserMovedMedium() {
+    controller.startNewGame();
+    dataModel.difficultyLevel = GameConstants.DifficultyLevel.Medium;
+    long startMoves = gameView.movesMade;
+    controller.userMoved();
+    long endMoves = gameView.movesMade;
+    assertEquals("Computer did not move", startMoves + 1, endMoves);
+  }
+
+  @Test
+  public void testUserMovedEasy() {
+    controller.startNewGame();
+    dataModel.difficultyLevel = GameConstants.DifficultyLevel.Easy;
+    long startMoves = gameView.movesMade;
+    controller.userMoved();
+    long endMoves = gameView.movesMade;
+    assertEquals("Computer did not move", startMoves + 1, endMoves);
+  }
+
+  @Test
+  public void testUserNoMove() {
+    for (int row = 0; row < GameConstants.ROWS; row++) {
+      for (int column = 0; column < GameConstants.COLUMNS; column++) {
+        dataModel.boardState[row * GameConstants.ROWS + column] = GameConstants.USERMARK;
+      }
+    }
+    long startMoves = gameView.movesMade;
+    controller.userMoved();
+    long endMoves = gameView.movesMade;
+    assertEquals("Computer should not have moved", startMoves, endMoves);
+  }
+
   @Test
   public void startNewGameTest() {
     dataModel.boardState[3] = GameConstants.USERMARK;
