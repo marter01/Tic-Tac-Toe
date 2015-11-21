@@ -14,12 +14,10 @@ interface UserMovedListener {
 }
 
 public class GameView extends JPanel implements GameStatisticsUpdateListener {
-  private static final long serialVersionUID = 1L;
 
   private GameDataModel dataModel;
 
-  private static int numberOfCells = GameConstants.ROWS * GameConstants.COLUMNS;
-  private JButton buttons[] = new JButton[numberOfCells];
+  private JButton buttons[] = new JButton[GameConstants.NUMBEROFCELLS];
 
   private JLabel winningLabel;
   private JButton playAgainButton;
@@ -56,7 +54,7 @@ public class GameView extends JPanel implements GameStatisticsUpdateListener {
     JPanel board = new JPanel();
     board.setLayout(new GridLayout(GameConstants.ROWS, GameConstants.COLUMNS, 2, 2));
 
-    for (int i = 0; i < numberOfCells; i++) {
+    for (int i = 0; i < GameConstants.NUMBEROFCELLS; i++) {
       buttons[i] = new JButton();
       buttons[i].setFocusPainted(false);
       buttons[i].setActionCommand(Integer.toString(i));
@@ -248,11 +246,11 @@ public class GameView extends JPanel implements GameStatisticsUpdateListener {
   }
 
   public void startNewGame() {
-    for (int i = 0; i < numberOfCells; i++ ) {
+    for (int i = 0; i < GameConstants.NUMBEROFCELLS; i++ ) {
       buttons[i].setText(GameConstants.NOONEMARK);
       buttons[i].setEnabled(true);
-      dataModel.boardState[i] = GameConstants.NOONEMARK;  
     }
+    dataModel.clearBoard();
   }
 
   public void askForNewGame() {

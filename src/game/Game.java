@@ -6,8 +6,6 @@ import java.awt.Menu;
 import java.awt.MenuItem;
 
 public class Game extends Frame {
-	private static final long serialVersionUID = 1L;
-		
   private GameDataModel dataModel = new GameDataModel();
   private GameView gameView = new GameView();
   private GameController gameController = new GameController();
@@ -73,7 +71,7 @@ public class Game extends Frame {
   }
 
   private void newGameActionPerformed(java.awt.event.ActionEvent evt) {
-    gameView.startNewGame();  
+    gameController.startNewGame();
   }
     
 }

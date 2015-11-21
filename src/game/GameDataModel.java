@@ -8,25 +8,14 @@ interface GameStatisticsUpdateListener {
 }
 
 public class GameDataModel {
-  private static int numberOfCells = GameConstants.ROWS * GameConstants.COLUMNS;
+  public String boardState[] = new String[GameConstants.NUMBEROFCELLS];
 
-  public String boardState[] = new String[numberOfCells];
-
-  private int gamesPlayed = 0;
-  public int getGamesPlayed() {
-    return this.gamesPlayed;
-  }
-  public void setGamesPlayed(int gamesPlayed) {
-    this.gamesPlayed = gamesPlayed;
-    gameStatisticsUpdated();
-  }
-  public void incrementGamesPlayed() {
-    this.gamesPlayed++;
-    gameStatisticsUpdated();
+  public long getGamesPlayed() {
+    return userWins + computerWins + ties;
   }
 
-  private int userWins = 0;
-  public int getUserWins() {
+  private long userWins = 0;
+  public long getUserWins() {
     return this.userWins;
   }
   public void setUserWins(int userWins) {
@@ -38,8 +27,8 @@ public class GameDataModel {
     gameStatisticsUpdated();
   }
   
-  private int computerWins = 0;
-  public int getComputerWins() {
+  private long computerWins = 0;
+  public long getComputerWins() {
     return this.computerWins;
   }
   public void setComputerWins(int computerWins) {
@@ -51,8 +40,8 @@ public class GameDataModel {
     gameStatisticsUpdated();
   }
   
-  private int ties = 0;
-  public int getTies() {
+  private long ties = 0;
+  public long getTies() {
     return this.ties;
   }
   public void setTies(int ties) {
@@ -76,4 +65,10 @@ public class GameDataModel {
     }  
   }
 
+  public void clearBoard() {
+    for (int i = 0; i < GameConstants.NUMBEROFCELLS; i++ ) {
+      boardState[i] = GameConstants.NOONEMARK;  
+    }
+  }
+  
 }
