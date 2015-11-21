@@ -16,6 +16,7 @@ public class GameViewMock extends GameView {
   }
 
   public void startNewGame() {
+    movesMade = 0;
     for (int i = 0; i < GameConstants.NUMBEROFCELLS; i++ ) {
       dataModel.boardState[i] = GameConstants.NOONEMARK;  
     }
@@ -30,6 +31,9 @@ public class GameViewMock extends GameView {
   }
 
   public void updateWinningDisplay(String display) {
+  }
+
+  public void askForNewGame() {
   }
 
 }
