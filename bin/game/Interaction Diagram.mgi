@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <CommunicationClass name="game.GameUtilities" x="636" y="174"/>
+    <CommunicationClass name="game.UserMovedListener" x="42" y="33"/>
+    <CommunicationClass name="game.GameView" x="259" y="33">
+        <Extension destinationClassName="game.GameStatisticsUpdateListener"/>
+        <Association destinationClassName="game.GameDataModel"
+            endpointName="dataModel" kind="Simple"/>
+        <Association destinationClassName="game.UserMovedListener"
+            endpointName="userMovedListeners" kind="Simple"/>
+        <Communication destinationClassName="game.UserMovedListener"/>
+        <Communication destinationClassName="game.GameDataModel"/>
+    </CommunicationClass>
+    <CommunicationClass name="game.MinimumMaximumScoreAlgorithm" x="366" y="310">
+        <Communication destinationClassName="game.GameUtilities"/>
+    </CommunicationClass>
+    <CommunicationClass name="game.GameStatisticsUpdateListener" x="5" y="302"/>
+    <CommunicationClass name="game.Game" x="439" y="31">
+        <Association destinationClassName="game.GameController"
+            endpointName="gameController" kind="Simple"/>
+        <Association destinationClassName="game.GameDataModel"
+            endpointName="dataModel" kind="Simple"/>
+        <Association destinationClassName="game.GameView"
+            endpointName="gameView" kind="Simple"/>
+        <Communication destinationClassName="game.GameController"/>
+    </CommunicationClass>
+    <CommunicationClass name="game.GameController" x="415" y="172">
+        <Extension destinationClassName="game.UserMovedListener"/>
+        <Association
+            destinationClassName="game.MinimumMaximumScoreAlgorithm"
+            endpointName="bestMoveAlgorithm" kind="Simple"/>
+        <Association destinationClassName="game.GameDataModel"
+            endpointName="dataModel" kind="Simple"/>
+        <Association destinationClassName="game.GameView"
+            endpointName="gameView" kind="Simple"/>
+        <Communication destinationClassName="game.GameUtilities"/>
+        <Communication destinationClassName="game.GameView"/>
+        <Communication destinationClassName="game.MinimumMaximumScoreAlgorithm"/>
+        <Communication destinationClassName="game.GameDataModel"/>
+    </CommunicationClass>
+    <CommunicationClass name="game.GameDataModel" x="42" y="173">
+        <Association
+            destinationClassName="game.GameStatisticsUpdateListener"
+            endpointName="gameStatisticsUpdateListeners" kind="Simple"/>
+        <Communication destinationClassName="game.GameStatisticsUpdateListener"/>
+    </CommunicationClass>
+</ClassDiagram>

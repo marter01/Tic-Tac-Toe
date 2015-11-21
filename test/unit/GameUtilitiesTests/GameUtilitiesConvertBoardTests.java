@@ -78,45 +78,50 @@ public class GameUtilitiesConvertBoardTests {
 
   @Test
   public void testConvertBoardStateToIntArrayRandom() {
-    String boardStateRandom[] = new String[numberOfCells];
     
-    for (int i = 0; i < numberOfCells; i++) {
-      int choice = ((int) (Math.random() * 3));
+    int numberOfAttempts = ((int) (Math.random() * 100));
+    for (int attempt = 0; attempt < numberOfAttempts; attempt++) {
+      String boardStateRandom[] = new String[numberOfCells];
       
-      if (choice == 0) {
-        boardStateRandom[i] = GameConstants.COMPUTERMARK;
+      for (int i = 0; i < numberOfCells; i++) {
+        int choice = ((int) (Math.random() * 3));
+        
+        if (choice == 0) {
+          boardStateRandom[i] = GameConstants.COMPUTERMARK;
+        }
+        else if (choice == 1) {
+          boardStateRandom[i] = GameConstants.USERMARK;
+        }
+        else {
+          boardStateRandom[i] = GameConstants.NOONEMARK;        
+        }
       }
-      else if (choice == 1) {
-        boardStateRandom[i] = GameConstants.USERMARK;
+      
+      GameConstants.Player[][] result = GameUtilities.convertBoardStateToIntArray(boardStateRandom);
+
+      int stateIndex = 0;
+      for (int row = 0; row < GameConstants.ROWS; row++) {
+        for (int column = 0; column < GameConstants.COLUMNS; column++, stateIndex++) {
+          GameConstants.Player playerResult = result[row][column];
+          String boardState = boardStateRandom[stateIndex];
+          
+          if (playerResult == GameConstants.Player.NOONE && boardState != GameConstants.NOONEMARK) {
+            fail("At row: " + String.valueOf(row) + " column: " + String.valueOf(column) + " player cells and board state are inconsistent (No One)");
+          }
+
+          if (playerResult == GameConstants.Player.COMPUTER && boardState != GameConstants.COMPUTERMARK) {
+            fail("At row: " + String.valueOf(row) + " column: " + String.valueOf(column) + " player cells and board state are inconsistent (Computer)");
+          }
+
+          if (playerResult == GameConstants.Player.USER && boardState != GameConstants.USERMARK) {
+            fail("At row: " + String.valueOf(row) + " column: " + String.valueOf(column) + " player cells and board state are inconsistent (User)");
+          }
+
+        }
       }
-      else {
-        boardStateRandom[i] = GameConstants.NOONEMARK;        
-      }
+
     }
     
-    GameConstants.Player[][] result = GameUtilities.convertBoardStateToIntArray(boardStateRandom);
-
-    int stateIndex = 0;
-    for (int row = 0; row < GameConstants.ROWS; row++) {
-      for (int column = 0; column < GameConstants.COLUMNS; column++, stateIndex++) {
-        GameConstants.Player playerResult = result[row][column];
-        String boardState = boardStateRandom[stateIndex];
-        
-        if (playerResult == GameConstants.Player.NOONE && boardState != GameConstants.NOONEMARK) {
-          fail("At row: " + String.valueOf(row) + " column: " + String.valueOf(column) + " player cells and board state are inconsistent (No One)");
-        }
-
-        if (playerResult == GameConstants.Player.COMPUTER && boardState != GameConstants.COMPUTERMARK) {
-          fail("At row: " + String.valueOf(row) + " column: " + String.valueOf(column) + " player cells and board state are inconsistent (Computer)");
-        }
-
-        if (playerResult == GameConstants.Player.USER && boardState != GameConstants.USERMARK) {
-          fail("At row: " + String.valueOf(row) + " column: " + String.valueOf(column) + " player cells and board state are inconsistent (User)");
-        }
-
-      }
-    }
-  
   }
   
 }
