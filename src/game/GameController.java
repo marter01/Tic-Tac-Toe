@@ -5,16 +5,18 @@ public class GameController implements UserMovedListener {
   private GameDataModel dataModel;
   private MinimumMaximumScoreAlgorithm bestMoveAlgorithm = new MinimumMaximumScoreAlgorithm();
   
-  private static int numberOfCells = GameConstants.ROWS * GameConstants.COLUMNS;
-
   public void startGame(GameView view, GameDataModel model) {
     gameView = view;
     dataModel = model;
 
     gameView.addUserMovedListener(this);
-    gameView.startNewGame();
+    startNewGame();
   }
  
+  public void startNewGame() {
+    gameView.startNewGame();      
+  }
+  
   public void userMoved() {
     if (!didSomeoneWin()) {
       computerMove();
@@ -52,7 +54,7 @@ public class GameController implements UserMovedListener {
     int move = -1;
     
     while (move == -1) {
-      int attempt = ((int) (Math.random() * numberOfCells));
+      int attempt = ((int) (Math.random() * GameConstants.NUMBEROFCELLS));
       if (dataModel.boardState[attempt] == GameConstants.NOONEMARK) {
         move = attempt;
       }
@@ -67,7 +69,6 @@ public class GameController implements UserMovedListener {
     GameConstants.Result gameWinner = GameUtilities.hasSomeoneWon(dataModel.boardState);
     if (gameWinner != GameConstants.Result.NONE) {
       someoneWon = true;
-      dataModel.incrementGamesPlayed();
 
       switch (gameWinner) {
       case TIE:

@@ -4,6 +4,7 @@ public final class GameConstants {
 
   public final static int ROWS = 3;
   public final static int COLUMNS = 3;
+  public final static int NUMBEROFCELLS = ROWS * COLUMNS;
 
   public final static String NOONEMARK = "";
   public final static String USERMARK = "X";
