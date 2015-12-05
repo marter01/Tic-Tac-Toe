@@ -70,7 +70,7 @@
 		<jacoco:coverage destfile="${coverage.report.dir}/coverage.data">
 			<junit fork="true" forkmode="once" haltonfailure="false" haltonerror="false" showoutput="true" printsummary="true">
 				<classpath refid="classpath.test" />
-				<formatter type="xml" />
+				<formatter type="plain" />
 				<batchtest fork="true" todir="${test.report.dir}">
 					<fileset dir="${test.src.dir}" includes="**/*Tests.java" />
 				</batchtest>
