@@ -1,4 +1,4 @@
-package unit.GameDataModelTests;
+package unit;
 
 import static org.junit.Assert.*;
 
