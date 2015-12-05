@@ -1,61 +1,119 @@
-<project name="TicTacToe" default="dist" basedir=".">
+<project name="TicTacToe" default="app-dist" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
 
-  <presetdef name="local.javac">
-    <javac includeantruntime="false" />
-  </presetdef>
-  <property name="app.src.dir" location="../src"/>
-  <property name="app.build.dir" location="../build"/>
-  <property name="dist.dir" location="../dist"/>
-  <property name="test.src.dir" location="../test"/>
-  <property name="test.build.dir" location="../build/test"/>
+	<presetdef name="local.javac">
+		<javac includeantruntime="false" />
+	</presetdef>
+	<property name="app.src.dir" location="../src" />
+	<property name="app.build.dir" location="../build" />
+	<property name="app.dist.dir" location="../dist" />
+	<property name="test.src.dir" location="../test" />
+	<property name="test.build.dir" location="../build/test" />
+	<property name="test.report.dir" location="../test-report" />
+	<property name="coverage.report.dir" location="${basedir}/../coverage-report" />
 
-  <path id="classpath.test">
-    <pathelement location="/Library/Java/JUnit/junit-4.12.jar"/>
-    <pathelement location="/Library/Java/JUnit/hamcrest-core-1.3.jar"/>
-    <pathelement location="${main.build.dir}"/>
-  </path>
+	<path id="classpath.test">
+		<pathelement location="/Library/Java/JUnit/lib/junit-4.12.jar" />
+		<pathelement location="/Library/Java/JUnit/lib/hamcrest-core-1.3.jar" />
+		<pathelement location="${app.build.dir}" />
+		<pathelement location="${test.build.dir}" />
+	</path>
 
-  <target name="init">
-    <tstamp/>
-    <mkdir dir="${app.build.dir}"/>
-  </target>
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+		<classpath path="/Library/Java/JaCoCo/lib/jacocoant.jar" />
+	</taskdef>
 
-  <target name="compile" depends="init" description="compile the source">
-    <local.javac srcdir="${app.src.dir}" destdir="${app.build.dir}"/>
-  </target>
+	<target name="init" description="build set up">
+		<tstamp />
+		<mkdir dir="${app.build.dir}" />
+		<mkdir dir="${test.build.dir}" />
+	</target>
 
-  <target name="dist" depends="compile" description="generate the distribution">
-    <mkdir dir="${dist.dir}/lib"/>
-    <jar jarfile="${dist.dir}/lib/Tic—Tac-Toe${DSTAMP}.jar" basedir="${build.dir}"/>
-  </target>
+	<target name="app-compile" depends="init" description="compile the source">
+		<local.javac srcdir="${app.src.dir}" destdir="${app.build.dir}" />
+	</target>
 
-  <target name="clean"
-        description="clean up">
-    <delete dir="${test.build.dir}"/>
-    <delete dir="${app.build.dir}"/>
-    <delete dir="${dist.dir}"/>
-  </target>
+	<target name="app-dist" depends="app-compile" description="generate the distribution">
+		<mkdir dir="${app.dist.dir}/lib" />
+		<jar jarfile="${app.dist.dir}/lib/Tic—Tac-Toe${DSTAMP}.jar" basedir="${app.build.dir}" />
+	</target>
 
-  <target name="test-compile" depends="compile">
-    <mkdir dir="${build.dir}"/>
-    <local.javac srcdir="${test.src.dir}" destdir="${test.build.dir}">
-        <classpath refid="classpath.test"/>
-        <classpath refid="app.build.dir"/>
-    </local.javac>
-  </target>
+	<target name="clean" description="clean up">
+		<delete dir="${app.build.dir}" />
+		<delete dir="${app.dist.dir}" />
+		<delete dir="${test.build.dir}" />
+		<delete dir="${test.report.dir}" />
+		<delete dir="${coverage.report.dir}" />
+		<delete>
+			<fileset dir="." includes="*.properties"/>
+		</delete>
+	</target>
 
+	<target name="test-compile" depends="app-compile" description="compile the tests">
+		<local.javac srcdir="${test.src.dir}" destdir="${test.build.dir}">
+			<classpath refid="classpath.test" />
+		</local.javac>
+	</target>
 
- <target name="test" depends="test-compile">
-    <junit printsummary="on" haltonfailure="yes" fork="true">
-        <classpath>
-          <path refid="classpath.test"/>
-          <pathelement location="${test.build.dir}"/>
-        </classpath>
-        <formatter type="brief" usefile="false" />
-        <batchtest>
-            <fileset dir="${test.src.dir}" includes="**/*Test.java" />
-        </batchtest>
-    </junit>
-  </target>
+	<target name="test-run" depends="test-compile" description="run the unit tests">
+		<mkdir dir="${test.report.dir}" />
+		<junit fork="true" forkmode="once" haltonfailure="false" haltonerror="false" showoutput="true" printsummary="true">
+			<classpath refid="classpath.test" />
+			<formatter type="plain" />
+			<batchtest fork="true" todir="${test.report.dir}">
+				<fileset dir="${test.src.dir}" includes="**/*Tests.java" />
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="coverage-test-run" depends="test-compile" description="run the unit tests with coverage metrics">
+		<mkdir dir="${test.report.dir}" />
+		<jacoco:coverage destfile="${coverage.report.dir}/coverage.data">
+			<junit fork="true" forkmode="once" haltonfailure="false" haltonerror="false" showoutput="true" printsummary="true">
+				<classpath refid="classpath.test" />
+				<formatter type="xml" />
+				<batchtest fork="true" todir="${test.report.dir}">
+					<fileset dir="${test.src.dir}" includes="**/*Tests.java" />
+				</batchtest>
+			</junit>
+		</jacoco:coverage>
+	</target>
+
+	<target name="coverage-report-html" depends="coverage-test-run" description="Summarize test coverage metrics in a Web page">
+		<jacoco:report>
+			<executiondata>
+				<file file="${coverage.report.dir}/coverage.data"/>
+			</executiondata>
+			<structure name="Tic-Tac-Toe Coverage Report">
+				<classfiles>
+					<fileset dir="${app.build.dir}">
+						<include name="game/*"/>
+					</fileset>
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${app.src.dir}"/>
+				</sourcefiles>
+			</structure>
+			<html destdir="${coverage.report.dir}/Coverage"/>
+		</jacoco:report>
+	</target>
+
+	<target name="coverage-report-xml" depends="coverage-test-run" description="Summarize test coverage metrics in an XML file">
+		<jacoco:report>
+			<executiondata>
+				<file file="${coverage.report.dir}/coverage.data"/>
+			</executiondata>
+			<structure name="Tic-Tac-Toe Coverage Report">
+				<classfiles>
+					<fileset dir="${app.build.dir}">
+						<include name="game/*"/>
+					</fileset>
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${app.src.dir}"/>
+				</sourcefiles>
+			</structure>
+			<xml destfile="${coverage.report.dir}/coverage.xml"/>
+		</jacoco:report>
+	</target>
 
 </project>
