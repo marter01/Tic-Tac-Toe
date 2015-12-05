@@ -1,4 +1,4 @@
-package unit.GameUtilitiesTests;
+package unit;
 
 import static org.junit.Assert.*;
 
